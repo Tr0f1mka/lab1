@@ -6,22 +6,22 @@ class CalcError(Exception):
 def prior_operator(str_operator: str) -> int:
     """ Функция расстановки приоритетов операторов"""
     match str_operator:
-        case "*": return 5
-        case "/": return 5
-        case "%": return 5
-        case "+": return 3
-        case "-": return 3
-        case _: return
+        case "**": return 3  # noqa: E701
+        case "*": return 2  # noqa: E701
+        case "/": return 2  # noqa: E701
+        case "//": return 2  # noqa: E701
+        case "%": return 2  # noqa: E701
+        case "+": return 1  # noqa: E701
+        case "-": return 1  # noqa: E701
+        case _: return 0     # noqa: E701
 
 def is_operator(stroka: str) -> bool:
     """является ли символ оператором"""
-    for i in ['+', '-', '*', '/', '%']:
-        if stroka == i: return True
+    for i in ['+', '-', '*', '/', '**', '//', '%']:
+        if stroka == i: return True  # noqa: E701
     return False
 
-isa = isinstance
-
-def to_reverse_poland_notation(stroka: list) -> list:
+def to_reverse_poland_notation(stroka: list[str]) -> list[str]:
     """перевод в обратную польскую нотацию"""
 
     stack = []     #стек операторов
@@ -33,31 +33,25 @@ def to_reverse_poland_notation(stroka: list) -> list:
         i += 1
 
         if re.fullmatch("[+-]?[0-9]+([.][0-9]+)?", elem):
-            assert (re.fullmatch("[+-]?[0-9]+([.][0-9]+)?", elem) != None)
-
             out_arr.append(elem)
-        elif re.match("[A-Za-z]+", str(elem)):
-            assert isa(elem, str)
-
-            out_arr.append(elem)
-
+        
         elif is_operator(elem):
             is_stack_not_empty = len(stack) > 0
 
             if is_stack_not_empty:
 
                 no_skobka_on_top = stack[-1] != '('
-                is_operator_prior_less_operator_on_tprior_operator = prior_operator(elem) <= prior_operator(stack[-1])
+                is_operator_prior_less_operator_on_top_prior = prior_operator(elem) <= prior_operator(stack[-1])
 
-            while (is_stack_not_empty and no_skobka_on_top and is_operator_prior_less_operator_on_tprior_operator):
-                """вставляем оператор в стек"""
+            while (is_stack_not_empty and no_skobka_on_top and is_operator_prior_less_operator_on_top_prior):
+                """выталкиваем в выход предыдущие операторы"""
                 out_arr.append(stack.pop())
                 is_stack_not_empty = len(stack) > 0
 
                 if is_stack_not_empty:
                     is_stack_not_empty = len(stack) > 0
                     no_skobka_on_top = stack[-1] != '('
-                    is_operator_prior_less_operator_on_tprior_operator = prior_operator(elem) <= prior_operator(stack[-1])
+                    is_operator_prior_less_operator_on_top_prior = prior_operator(elem) <= prior_operator(stack[-1])
             
             stack.append(elem)
         
@@ -74,6 +68,8 @@ def to_reverse_poland_notation(stroka: list) -> list:
         elif elem == '(':
             stack.append(elem)
         
+        #print(elem, stack, out_arr)
+    
     is_stack_not_empty = len(stack) > 0
     while is_stack_not_empty:
 
@@ -86,15 +82,12 @@ def to_reverse_poland_notation(stroka: list) -> list:
 
 
 
-
-
-
-
 def test():
-    print(to_reverse_poland_notation("1 + 2"))
-    print(to_reverse_poland_notation("1 + 12 * 3"))
-    print(to_reverse_poland_notation("3 + 3 / -7"))
-    print(to_reverse_poland_notation("3 % 33.3 * +8 + 5 + 6"))
+    print(to_reverse_poland_notation("1 + 2".split()))
+    print(to_reverse_poland_notation("1 + 12 * 3".split()))
+    print(to_reverse_poland_notation("3 + 3 / -7".split()))
+    print(to_reverse_poland_notation("3 % 33.3 * +8 + 5 + 6".split()))
+    print(to_reverse_poland_notation("3 % 33.3 * ( +8 + 5 ) * 6".split()))
 
 test()
 
