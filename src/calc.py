@@ -63,15 +63,3 @@ def calc(arr: list[str]) -> list[float] | str:
         return ans
     else: 
         return err
-
-
-def test():
-    print(calc(['1', '2', '+']))
-    print(calc(['1', '12', '3', '*', '+']))
-    print(calc(['3', '3', '0', '//', '+']))
-    print(calc(['3', '33.3', '%', '+8', '*', '5', '+', '6', '+']))
-    print(calc(['3', '33.3', '%', '+8', '5', '+', '*', '6', '*']))
-    print(calc(['3', '33.3', '/', '+8', '0', '+', '/', '0', '/']))
-
-
-#test()

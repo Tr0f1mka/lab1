@@ -44,41 +44,44 @@ def main() -> None:
     """
     start()
 
-    working = True
-    infix = True
-    while working:
+    working = True      #Переменная работы цикла
+    infix = True        #Переменная режима работы калькулятора
+    while working:      #Основной цикл
         print()
         cin = input("Введите выражение/команду: ")
         print()
-        if cin == "help":
+        if cin == "help":       #Вывод списка команд
             help()
-        elif cin == "infix":
+
+        elif cin == "infix":    #Переключение между режимами
             print("Калькулятор переведён в инфиксный режим")
             infix = True
         elif cin == "postfix":
             print("Калькулятор переведён в постфиксный режим")
             infix = False
-        elif cin == "exit":
+
+        elif cin == "exit":     #Выход из программы
             working = False
-        else:
-            if re.search(r"[A-z]+", cin) is not None:
-                print("Ошибка ввода. Вводите только цифры, +, -, *, /, %, (, ).")
+        else:                   #Попытка решения выражения
+            if re.search(r"[^ \d+ + \- * / % \( \)]", cin) is not None:    #Вывод ошибки использования недопустимых символов
+                print("Ошибка ввода. Вводите только цифры, +, -, *, /, %, (, ) или")
+                print("установленные команды(в нижнем регистре).")
             else:
-                cin = parser.tokens(cin)
+                cin = parser.tokens(cin)    #Разбиение строки на токены
                 #print(cin)
-                if infix:
+                if infix:                   #Перевод в постфиксную форму
                     cin = reverse_poland_notation.to_reverse_poland_notation(cin)
                 #print(cin)
-                if type(cin) is not type("abc"):
+                if type(cin) is not type("abc"):  #Проверка, что в переменной нет сообщения об ошибке
                     cin = calc.calc(cin)
-                    if len(cin) == 1:
+                    if len(cin) == 1:    #Проверка, что в переменной нет сообщения об ошибке
                         print(cin[0])
                     else:
                         print(cin)
                 else:
                     print(cin)
     
-    print("Good bye")
+    print("Завершение работы")
                 
 
     

@@ -105,17 +105,3 @@ def to_reverse_poland_notation(stroka: list[str]) -> list[str] | str:
     if '(' in out_arr:
         return "Недостаточно скобок"
     return out_arr
-
-
-
-
-def test():
-    print(to_reverse_poland_notation("1 + 2".split()))
-    print(to_reverse_poland_notation("1 + 12 * 3".split()))
-    print(to_reverse_poland_notation("3 + 3 / -7".split()))
-    print(to_reverse_poland_notation("3 % 33.3 * +8 + 5 + 6".split()))
-    print(to_reverse_poland_notation("3 % 33.3 * ( +8 + 5 ) * 6".split()))
-
-#test()
-
-#print([x for x in '12  + 45   - 7'.split()])
