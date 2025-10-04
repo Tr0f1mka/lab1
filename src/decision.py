@@ -289,4 +289,4 @@ test = [
 #for i in test:
 #print(decision("56 + x", True, {"x": "56"}), end="\n\n")
 
-print(decision("(-(6) +9) *2", True, {}))
+#print(decision("(-(6) +9) *2", True, {}))
