@@ -20,8 +20,8 @@ tests = [
     "7//3+7%3",
     "12/-3*(+2)",
 ]
-#for t in tests:
-#    print(t, "=>", *tokens(t))
+for t in tests:
+    print(t, "=>", *tokens(t))
 
 
 
@@ -37,3 +37,20 @@ def test():
 #test()
 
 #print([x for x in '12  + 45   - 7'.split()])
+
+
+
+tests = [
+    "-5+2*3",
+    "+7--2*3",
+    "-(-2+3)*4",
+    "2**3**2",
+    "7//3+7%3",
+    "12/-3*(+2)",
+]
+#for t in tests:
+#    print(t, "=>", *tokens(t))
+
+#a = tokens('abs(pow(-56)*7) + sqrt(56, 67)')
+#print(a)
+#print(tokens("sqrt(56 7 - ) + 5"))
