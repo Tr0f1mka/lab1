@@ -5,10 +5,10 @@
 """------библиотеки------"""
 
 import re                                       # noqa: E402
-import patterns                                 #type: ignore  # noqa: E402
-import parser                                   #type: ignore  # noqa: E402
-import reverse_poland_notation                  #type: ignore  # noqa: E402
-import calc                                     #type: ignore  # noqa: E402
+import src.patterns as patterns                                 #type: ignore  # noqa: E402
+import src.parser as parser                                   #type: ignore  # noqa: E402
+import src.reverse_poland_notation as reverse_poland_notation                  #type: ignore  # noqa: E402
+import src.calc as calc                                     #type: ignore  # noqa: E402
 
 
 
@@ -46,7 +46,7 @@ def decision(stroka: str, infix: bool, variables: dict) -> float | int | str:
         stroka_tokens = parser.tokens(stroka)
         #print(stroka_tokens)
         if type(stroka_tokens) is str:
-            print(0)
+            #print(0)
             return stroka_tokens
         #Если в строке есть функции, обрабатываем их и заменяем на их значения
         if ("abs" in stroka) or ("sqrt" in stroka) or ("pow" in stroka) or ("max" in stroka) or ("min" in stroka) or (re.search(patterns.NAME_PATT, stroka)):
@@ -62,10 +62,12 @@ def decision(stroka: str, infix: bool, variables: dict) -> float | int | str:
                     a = decision(stroka_tokens[i][4:-1], infix, variables)    #Ищем значение выражения в скобках
                     try:       #Подставляем значение функции, если решение её аргумента - число, или возвращаем сообщение об ошибке
                         if type(a) is int:
-                            stroka_tokens[i] = str(abs(int(a)))
+                            stroka_tokens[i] = str(abs(int(a)))    #type: ignore
                         else:
-                            stroka_tokens[i] = str(abs(float(a)))
+                            stroka_tokens[i] = str(abs(float(a)))    #type: ignore
                     except(TypeError):
+                        return a
+                    except(ValueError):
                         return a
 
                 #Обработка возведения в степень
@@ -97,15 +99,11 @@ def decision(stroka: str, infix: bool, variables: dict) -> float | int | str:
                                         b = float(b)
                                     else:
                                         b = int(b)
-                                    stroka_tokens[i] = str(a**b)
+                                    stroka_tokens[i] = str(a**b)   #type: ignore
                                 except(TypeError):
                                     return b
-
-
-                                if type(b) is str:     #Если во втором аргументе ошибка, возвращаем её
+                                except(ValueError):
                                     return b
-                                else:     #Иначе заменяем функцию на её значение
-                                    stroka_tokens[i] = str(a ** b)
                     else:    #Если больше 2 аргументов, возвращаем ошибку
                         return "Функция pow должна иметь 2 аргумента"
 
@@ -122,8 +120,10 @@ def decision(stroka: str, infix: bool, variables: dict) -> float | int | str:
                         else:
                             a = int(a)
 
-                        stroka_tokens[i] = str(a**0.5)
+                        stroka_tokens[i] = str(a**0.5)   #type: ignore
                     except(TypeError):  #Иначе возвращаем ошибку
+                        return a
+                    except(ValueError):
                         return a
 
                 #Обработка максимума
@@ -133,9 +133,9 @@ def decision(stroka: str, infix: bool, variables: dict) -> float | int | str:
                     expr = parser.tokens(stroka_tokens[i][4:-1])     #Парсим выражение функции, чтобы найти запятые, разделяющие аргументы
                     elements = []     #Список аргументов функции
                     elem = ""         #Переменная, в которой "сшиваются" токены аргументов
-                    for j in expr:
-                        if j != ",":     #Если текущий токен - не ",", сшиваем его с остальными текущего аргумента
-                            elem += j
+                    for j in range(len(expr)):
+                        if expr[j] != ",":     #Если текущий токен - не ",", сшиваем его с остальными текущего аргумента
+                            elem += expr[j]
                         else:            #Иначе проверяем аргумент на ошибки и добавляем в список аргументов в случае корректности
                             if elem == "":
                                 return "Функция max должна содержать непустой(-ые) аргумент(-ы)"
@@ -156,7 +156,7 @@ def decision(stroka: str, infix: bool, variables: dict) -> float | int | str:
                         else:
                             elements.append(elem)
                             elem = ""
-                    stroka_tokens[i] = str(max(elements))     #Заменяем функцию на результат
+                    stroka_tokens[i] = str(max(elements))   #type: ignore     #Заменяем функцию на результат
 
 
                 #Обработка минимума
@@ -166,9 +166,9 @@ def decision(stroka: str, infix: bool, variables: dict) -> float | int | str:
                     expr = parser.tokens(stroka_tokens[i][4:-1])     #Парсим выражение функции, чтобы найти запятые, разделяющие аргументы
                     elements = []     #Список аргументов функции
                     elem = ""         #Переменная, в которой "сшиваются" токены аргументов
-                    for j in expr:
-                        if j != ",":     #Если текущий токен - не ",", сшиваем его с остальными текущего аргумента
-                            elem += j
+                    for j in range(len(expr)):
+                        if expr[j] != ",":     #Если текущий токен - не ",", сшиваем его с остальными текущего аргумента
+                            elem += expr[j]
                         else:            #Иначе проверяем аргумент на ошибки и добавляем в список аргументов в случае корректности
                             if elem == "":
                                 return "Функция min должна содержать непустой(-ые) аргумент(-ы)"
@@ -190,13 +190,13 @@ def decision(stroka: str, infix: bool, variables: dict) -> float | int | str:
                             elements.append(elem)
                             elem = ""
 
-                    stroka_tokens[i] = str(min(elements))     #Заменяем функцию на результат
+                    stroka_tokens[i] = str(min(elements))   #type: ignore     #Заменяем функцию на результат
 
                 #Обработка переменных
                 elif re.fullmatch(patterns.NAME_PATT, stroka_tokens[i]):
                     #print(1)
                     try:
-                        stroka_tokens[i] = variables[stroka_tokens[i]]
+                        stroka_tokens[i] = variables[stroka_tokens[i]]   #type: ignore
                     except(KeyError):
                         return f"Переменная {stroka_tokens[i]} не задана"
                     except():
@@ -208,7 +208,7 @@ def decision(stroka: str, infix: bool, variables: dict) -> float | int | str:
                 #Обработка переменных
                 if re.fullmatch(patterns.NAME_PATT, stroka_tokens[i]):
                     try:
-                        stroka_tokens[i] = variables[stroka_tokens[i]]
+                        stroka_tokens[i] = variables[stroka_tokens[i]]   #type: ignore
                     except(KeyError):
                         return f"Переменная {stroka_tokens[i]} не задана"
                     except():
@@ -216,7 +216,7 @@ def decision(stroka: str, infix: bool, variables: dict) -> float | int | str:
                         return "Ошибка ввода"
 
         #print(stroka_tokens)
-        stroka_rpn = reverse_poland_notation.to_reverse_poland_notation(stroka_tokens)
+        stroka_rpn = reverse_poland_notation.to_reverse_poland_notation(stroka_tokens)   #type: ignore
         if type(stroka_rpn) is str:
             #print("!")
             return stroka_rpn
@@ -264,7 +264,7 @@ def decision(stroka: str, infix: bool, variables: dict) -> float | int | str:
                     #print(stroka_tokens)
                     if check != stroka_rpn:
                         return "Ошибка ввода"
-                    return calc.calc(stroka_tokens)
+                    return calc.calc(stroka_tokens)   #type: ignore
             else:
                 #print(stroka, stroka_tokens, stroka_rpn)
                 if len(check) > 1:
@@ -274,9 +274,9 @@ def decision(stroka: str, infix: bool, variables: dict) -> float | int | str:
 
                         if reverse_poland_notation.is_operator(check[i]) == reverse_poland_notation.is_operator(check[i+1]):
                             return "Ошибка ввода"
-                        return calc.calc(stroka_rpn)
+                        return calc.calc(stroka_rpn)   #type: ignore
 
-    return calc.calc(stroka_rpn)
+    return calc.calc(stroka_rpn)   #type: ignore
 
 
 
@@ -289,4 +289,4 @@ test = [
 #for i in test:
 #print(decision("56 + x", True, {"x": "56"}), end="\n\n")
 
-#print(decision("(-(6) +9) *2", True, {}))
+#print(decision("n4y +8", True, {"n4y":"7"}))

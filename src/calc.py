@@ -7,7 +7,7 @@
 """------------библиотеки-------------"""
 
 import re           # noqa: E402
-import patterns     #type: ignore  # noqa: E402
+import src.patterns as patterns     #type: ignore  # noqa: E402
 
 
 

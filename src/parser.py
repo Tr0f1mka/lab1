@@ -8,8 +8,7 @@
 
 """-------------библиотеки-------------"""
 
-import patterns   #type: ignore  # noqa: E402
-
+from src.patterns import TOKEN_RE   #type: ignore  # noqa: E402
 
 
 """----------функции----------"""
@@ -21,7 +20,7 @@ def tokens(s: str) -> list[str] | str:
     :return: Список строк, состоящий из элементов математического выражения, или строка - сообщение об ошибке
     """
 
-    arr_tokens = [m.group(1) for m in patterns.TOKEN_RE.finditer(s)]    #Разбиваем строку на токены
+    arr_tokens = [m.group(1) for m in TOKEN_RE.finditer(s)]    #Разбиваем строку на токены
     if ("abs" in arr_tokens) or ("sqrt" in arr_tokens) or ("pow" in arr_tokens) or ("max" in arr_tokens) or ("min" in arr_tokens):    #Если есть токены названий функций, собираем её елементы вместе
         flag = False    #Флаг сборки функции
         elem = ""       #Переменная сборки функции

@@ -8,8 +8,8 @@
 """---------библиотеки---------"""
 
 import re                        # noqa: E402
-import patterns                  #type: ignore  # noqa: E402
-import decision                  #type: ignore  # noqa: E402
+import src.patterns as patterns                  #type: ignore  # noqa: E402
+import src.decision as decision                  #type: ignore  # noqa: E402
 
 
 
@@ -54,7 +54,6 @@ def let(stroka: str, infix: bool):
     Функция объявления переменной
     :param stroka: Строка - введённое пользователем выражение
     :param infix: Логический тип, задающий режим ввода
-    :param variables: Словарь, хранящий переменные и их значения
     :return: Данная функция ничего не возвращает
     """
 
@@ -81,9 +80,9 @@ def let(stroka: str, infix: bool):
                     variables[name_var_str] = str(value)
                     print(f"Переменная {name_var_str} успешно задана")
             else:
-                print("Ошибка ввода имени переменной")
+                print("Ошибка ввода имени переменной: неправильное название переменной")
         else:
-            print("Ошибка ввода имени переменной")
+            print("Ошибка ввода имени переменной: переменная должна быть одним словом")
 
 
 
@@ -116,7 +115,7 @@ def main() -> None:
 
         elif re.match(patterns.LET_WORD_PATT, cin):      #Объявление переменной
             if re.fullmatch(patterns.LET_PATT, cin):
-                let(cin, infix)  # noqa: F823
+                let(cin, infix)
             else:
                 print("Неправильное объявление переменной")
 
