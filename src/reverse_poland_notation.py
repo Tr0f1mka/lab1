@@ -49,7 +49,7 @@ def is_operator(symbol: str) -> bool:
 def to_reverse_poland_notation(stroka: list[str]) -> list[str] | str:
     """
     Перевод в обратную польскую нотацию
-    :param stroka: Список строк, являющийся математическим выражением в инфиксной форме
+    :param stroka: Список строк, являющийся математическим выражением
     :return out_arr: Список строк, являющийся математическим выражением в постфиксной(обратной польской) форме
     """
 
@@ -108,3 +108,5 @@ def to_reverse_poland_notation(stroka: list[str]) -> list[str] | str:
     if '(' in out_arr:
         return "Недостаточно скобок"
     return out_arr
+
+#print(to_reverse_poland_notation(['4', '+', '6', '*', '(', '~', '3', '+', '1', '/', '(', '7', '%', '6', ')', ')']))

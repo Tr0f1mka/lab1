@@ -53,9 +53,13 @@ def calc(arr: list[str]) -> int | float | str:
             else:
                 try:
                     op2, op1 = ans.pop(), ans.pop()
-                    if (arr[i] in ["//", "%"]) and ((type(op1) is float) or (type(op2) is float)):
-                        return '"//" и "%" только для целых чисел '
-                    ans.append(operations[arr[i]](op1, op2))   #type: ignore
+                    if (arr[i] in ["//", "%"]):
+                        if (op1 % 1 != 0 or op2 % 1 != 0):
+                            return '"//" и "%" только для целых чисел'
+                        else:
+                            ans.append(operations[arr[i]](int(op1), int(op2)))   #type: ignore
+                    else:
+                        ans.append(operations[arr[i]](op1, op2))   #type: ignore
                 except(ZeroDivisionError):
                     return "Деление на ноль"
                 except(IndexError):
@@ -63,7 +67,7 @@ def calc(arr: list[str]) -> int | float | str:
                 except():
                     return "Ошибка ввода"
 
-    if len(ans) != 1:
+    if len(ans) != 1:     #Если в итоговом списке больше одного оператора - значит в выражении слишком много операнд
         return "Недостаточно операторов"
 
     return ans[0]
