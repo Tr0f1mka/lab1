@@ -59,7 +59,7 @@ def to_reverse_poland_notation(stroka: list[str]) -> list[str] | str:
     for i in range(len(stroka)):
         elem = stroka[i]
         #print(elem, stack, out_arr)
-        if re.fullmatch(patterns.SIGNED_NUM, elem):   #Если число, кладём в стек
+        if re.fullmatch(patterns.SIGNED_NUM, elem) or re.fullmatch(patterns.UNARY_NUM, elem):   #Если число, кладём в стек
             out_arr.append(elem)
 
         elif is_operator(elem):                             #Если оператор, кладём в соответствующее место в стеке, при необходимости выталкивая операторы из стека в итоговый список

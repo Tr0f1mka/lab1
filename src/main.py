@@ -49,7 +49,7 @@ def help() -> None:
     print("min(a[, b, ...]) - ищет минимум из чисел")
     print("exit - выход из Калькулятора")
 
-def let(stroka: str, infix: bool):
+def let(stroka: str, infix: bool) -> None:
     """
     Функция объявления переменной
     :param stroka: Строка - введённое пользователем выражение

@@ -30,23 +30,40 @@ def calc(arr: list[str]) -> int | float | str:
     :param arr: Список, являющийся математичким выражением в постфиксной форме
     :return: Вещественное или целое число, являющееся значением выражения, или строка - сообщение об ошибке
     """
-
+    #print(arr)
     ans: list[float|int] = []            #стек ответа
 
     for i in range(len(arr)):
-        #print(arr[i], type(arr[i]))
-        if re.fullmatch(patterns.SIGNED_NUM, arr[i]):         #если текущий элемент - число, кладём в стек ответа
-            a = float(arr[i])
+        #print(arr[i])
+        if re.fullmatch(patterns.UNARY_NUM, arr[i]):
+            #print('aboba', arr[i][:-1])
+            a = '-'+arr[i][:-1]
+            a = float(a)   #type: ignore
             if a % 1 == 0:
                 ans.append(int(a))
             else:
-                ans.append(a)
+                ans.append(a)   #type: ignore
+        elif re.fullmatch(patterns.SIGNED_NUM, arr[i]):         #если текущий элемент - число, кладём в стек ответа
+            a = float(arr[i])   #type: ignore
+            if a % 1 == 0:
+                ans.append(int(a))
+            else:
+                ans.append(a)   #type: ignore
+        elif re.fullmatch(patterns.UNARY_NUM, arr[i]):
+            a = '-'+arr[i][:-1]
+            a = float(arr[i])   #type: ignore
+            if a % 1 == 0:
+                ans.append(int(a))
+            else:
+                ans.append(a)   #type: ignore
         else:                                 #иначе - выполняем операцию, соответствующую текущему элементу, если это возможно
             if arr[i] == "~" or arr[i] == "$":
+                #print("op =", arr[i])
                 try:
                     op1 = ans.pop()
                     ans.append(operations[arr[i]](op1))   #type: ignore
                 except(IndexError):
+                    #print("Err")
                     return "Недостаточно операнд"
                 except():
                     return "Ошибка ввода"
@@ -63,11 +80,12 @@ def calc(arr: list[str]) -> int | float | str:
                 except(ZeroDivisionError):
                     return "Деление на ноль"
                 except(IndexError):
+                    #print("Err")
                     return "Недостаточно операнд"
                 except():
                     return "Ошибка ввода"
 
     if len(ans) != 1:     #Если в итоговом списке больше одного оператора - значит в выражении слишком много операнд
         return "Недостаточно операторов"
-
+    #print("Answer", ans[0])
     return ans[0]

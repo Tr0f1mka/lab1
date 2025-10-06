@@ -11,20 +11,28 @@ import re  # noqa: E402
 
 NUM = r"\d+(?:\.\d+)?"                                                       #Шаблон числа без знака
 SIGNED_NUM = rf"[+\-]?{NUM}"                                                 #Шаблон числа со знаком
-SIGNED_AT_START = rf"(?<=^){SIGNED_NUM}"                                     #Шаблон числа с унарным знаком в начале выражения
+UNARY_NUM = rf"{NUM}~"                                                       #Шаблон для определения токена с унарным минусом
+SIGNED_AT_START = rf"^{SIGNED_NUM}"                                          #Шаблон числа с унарным знаком в начале выражения
 SIGNED_AFTER_BRACKET = rf"(?<=\(){SIGNED_NUM}"                               #Шаблон числа с унарным знаком после '('
 SIGNED_AFTER_OP = rf"(?<=([ + \- * / ( ]\s{0,9999999999})){SIGNED_NUM}"      #Шаблон числа с унарным знаком после оператора или '('
-PLAIN_NUMBER    = rf"(?<![\d\)]){NUM}"                                       #Шаблон числа без унарного знака, если перед ним нет другого числа или '('
+PLAIN_NUMBER    = rf"(?<![\d]){NUM}"                                         #Шаблон числа без унарного знака, если перед ним нет другого числа или '('
 
 UNARY_MINUS_AT_START_BEFORE_BRACKET = r"(?<=^)\s*-\s*(?=\()"                 #Шаблон унарного минуса перед скобкой в начале выражения
 UNARY_MINUS_AFTER_BRACKET_BEFORE_BRACKET = r"(?<=\()\s*-\s*(?=\()"           #Шаблон унарного минуса перед скобкой после открывающей скобки
-UNARY_MINUS = rf"{UNARY_MINUS_AT_START_BEFORE_BRACKET}|{UNARY_MINUS_AFTER_BRACKET_BEFORE_BRACKET}"  #объединение предыдущих двух шаблонов
+UNARY_MINUS_AT_START_BEFORE_NUMBER = rf"^\s*-\s*(?={NUM})"                   #Шаблон унарного плюса перед числом в начале выражения
+UNARY_MINUS_AFTER_BRACKET_BEFORE_NUMBER = rf"(?<=\()\s*-\s*(?={NUM})"        #Шаблон унарного минуса перед числом после открывающей скобки
+UNARY_MINUS = rf"{UNARY_MINUS_AT_START_BEFORE_BRACKET}|{UNARY_MINUS_AFTER_BRACKET_BEFORE_BRACKET}|{UNARY_MINUS_AT_START_BEFORE_NUMBER}|{UNARY_MINUS_AFTER_BRACKET_BEFORE_NUMBER}"  #объединение предыдущих четырёх шаблонов
 
 UNARY_PLUS_AT_START_BEFORE_BRACKET = r"(?<=^)\s*\+\s*(?=\()"                 #Шаблон унарного плюса перед скобкой в начале выражения
 UNARY_PLUS_AFTER_BRACKET_BEFORE_BRACKET = r"(?<=\()\s*\+\s*(?=\()"           #Шаблон унарного плюса перед скобкой после открывающей скобки
-UNARY_PLUS = rf"{UNARY_PLUS_AT_START_BEFORE_BRACKET}|{UNARY_PLUS_AFTER_BRACKET_BEFORE_BRACKET}"     #объединение предыдущих двух шаблонов
+UNARY_PLUS_AT_START_BEFORE_NUMBER = rf"^\s*\+\s*(?={NUM})"                    #Шаблон унарного плюса перед числом в начале выражения
+UNARY_PLUS_AFTER_BRACKET_BEFORE_NUMBER = rf"(?<=\()\s*\+\s*(?={NUM})"         #Шаблон унарного плюса перед числом после открывающей скобки
+UNARY_PLUS = rf"{UNARY_PLUS_AFTER_BRACKET_BEFORE_BRACKET}|{UNARY_PLUS_AT_START_BEFORE_BRACKET}|{UNARY_PLUS_AT_START_BEFORE_NUMBER}|{UNARY_PLUS_AFTER_BRACKET_BEFORE_NUMBER}"  #объединение предыдущих четырёх шаблонов
 
 BAN_SYMBOLS_PATT = r"[^\w+\-*/~%$\(\)\.,\=\s]"     #Шаблон запрещённых символов
+BAN_NUM1 = r"(\.(?=[^\d]))|((?<=[^\d])\.)|(^\.)|(\.$)"                   #Шаблон ошибочного числа(отсутствие дробной части после .)
+BAN_NUM2 = r"(\s+\.)|(\.\s+)"                      #Шаблон ошибочного числа(есть пробелы до или после точки)
+BAN_NUM = rf"{BAN_NUM1}|{BAN_NUM2}"                #Объединение предыдущих двух шаблонов
 
 NAME_PATT = r"[A-Za-z_]\w*"      #Шаблон имени переменной
 LET_WORD_PATT = r"\s*let\s+"
