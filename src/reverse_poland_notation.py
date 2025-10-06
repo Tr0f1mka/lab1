@@ -58,7 +58,7 @@ def to_reverse_poland_notation(stroka: list[str]) -> list[str] | str:
 
     for i in range(len(stroka)):
         elem = stroka[i]
-        #print(elem, stack, out_arr)
+
         if re.fullmatch(patterns.SIGNED_NUM, elem) or re.fullmatch(patterns.UNARY_NUM, elem):   #Если число, кладём в стек
             out_arr.append(elem)
 
@@ -96,8 +96,6 @@ def to_reverse_poland_notation(stroka: list[str]) -> list[str] | str:
         elif elem == '(':                                   #Если '(' кладём в стек
             stack.append(elem)
 
-        #print(elem, stack, out_arr)
-
     is_stack_not_empty = len(stack) > 0
     while is_stack_not_empty:
         #Если в стеке есть операторы, кладём их в итоговый список
@@ -108,5 +106,3 @@ def to_reverse_poland_notation(stroka: list[str]) -> list[str] | str:
     if '(' in out_arr:
         return "Недостаточно скобок"
     return out_arr
-
-#print(to_reverse_poland_notation(['4', '+', '6', '*', '(', '~', '3', '+', '1', '/', '(', '7', '%', '6', ')', ')']))

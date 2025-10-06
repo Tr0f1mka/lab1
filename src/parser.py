@@ -60,4 +60,3 @@ def tokens(s: str) -> list[str] | str:
 
     else:     #Если нет функций в списке токенов, возвращаем его
         return arr_tokens
-#print(tokens('x 2** 5.2 x*-1+'))

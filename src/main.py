@@ -69,7 +69,6 @@ def let(stroka: str, infix: bool) -> None:
                 print("Названия функций не могут быть именем переменной")
             elif re.fullmatch(patterns.NAME_PATT, name_var[0]):
                 name_var_str = name_var[0]
-                #print(a, a[1])
                 value = decision.decision(a[1], infix, {})
                 if type(value) is str:
                     if value.find("Переменная") != -1:
@@ -137,8 +136,6 @@ def main() -> None:
             print(decision.decision(cin, infix, variables))
 
     print("Завершение работы")
-
-
 
 
 if __name__ == "__main__":
